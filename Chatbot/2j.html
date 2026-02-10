@@ -14,14 +14,17 @@
         //Ternary Operator
         // const result = value ? value2 : value3;
 
-        function ProductDetails({name, price, discountPrice}) {
+        function ProductDetails({name, price, discountPrice, imgSrc}) {
           return (
             <>
                 <p>{name}</p>
+                {imgSrc && <img src={imgSrc} alt={name} width="200" height="200" />}
                 {discountPrice ? (
                     <>
-                        <del>Price: ${price}</del>
-                        <p>Discount Price: ${discountPrice}</p>
+                        <div>
+                            <del>Price: ${price}</del>
+                            <p>Discount Price: ${discountPrice}</p>
+                        </div>
                     </>
                 ) : (
                     <p>Price: ${price}</p>
@@ -34,9 +37,22 @@
         function App(){
           return (
             <>
-                <ProductDetails name="Cotton Socks" price="10.90" discountPrice="5.45" />
-                <ProductDetails name="Tennis Balls" price="6.00" />
-                <ProductDetails name="Plain T-Shirt" price="25.00"  />
+                <ProductDetails 
+                    name="Cotton Socks" 
+                    price="10.90" 
+                    discountPrice="5.45" 
+                    imgSrc="cotton-socks.png"
+                />
+                <ProductDetails 
+                    name="Tennis Balls" 
+                    price="6.00" 
+                    imgSrc="tennis-balls.png"
+                />
+                <ProductDetails 
+                    name="Plain T-Shirt" 
+                    price="25.00" 
+                    imgSrc="plain-t-shirt.png"
+                />
             </>
           );
         }
