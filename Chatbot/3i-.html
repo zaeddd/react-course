@@ -18,20 +18,25 @@
           setInputText(event.target.value);
         }
 
-
+        function keyPressFunction(event) {
+            if(event.key === 'Enter'){
+                setInputText('');
+            }else if(event.key === 'Escape'){
+                setInputText('');
+            }
+        };
 
         return (
           <>
             <input
               onChange={saveInputText}
+              onKeyDown={keyPressFunction}
               placeholder="Type a name here"
               value={inputText}
             />
             <button onClick={saveInputText}>
               Send
             </button>
-            <br/>
-            <img src='user.png' width="50" />
           </>
         )
       }
