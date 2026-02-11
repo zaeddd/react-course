@@ -11,38 +11,59 @@
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
 
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
-        function ChatInput() {
+        function ChatInput({ chatMessages, setChatMessages }) {
+          const [inputText, setInputText] = React.useState('');
+
+          function saveInputText(event){
+            setInputText(event.target.value);
+          }
+
+
+         function sendMessage(){
+            const newChatMessages = [
+              ...chatMessages,
+              {
+                message: inputText,
+                sender: 'user',
+                id: crypto.randomUUID()
+              }
+           ];
+
+           setChatMessages(newChatMessages);
+
+           const response = Chatbot.getResponse(inputText);
+           setChatMessages([
+              ...newChatMessages,
+              {
+                message: response,
+                sender: 'robot',
+                id: crypto.randomUUID()
+              }
+           ]);
+
+            setInputText('');
+        }
           return (
-            <div>
+            <>
               <input 
                 type="text" 
                 placeholder="Send a message..." 
                 size="30"
+                onChange={saveInputText}
+                value={inputText}
               />
-
-              <button>Send</button>
-            </div>
+              <button 
+                onClick={sendMessage}
+              >Send</button>
+            </>
           );
         }
 
         function ChatMessage({message, sender}) {
-          //const message = props.message;
-          //const sender = props.sender;
-          //const{message, sender} = props;
-
-          /*
-          if(sender === "robot"){
-            return(
-              <div>
-                <img src="robot.png" alt="Robot Image" width="50" />
-                {message}
-              </div>
-            );
-          }
-          */
-
           return(
             <div>
               {sender === "robot" && (
@@ -56,25 +77,51 @@
           );
         }
 
+        function ChatMessages({ chatMessages }) {
+          return(
+            <>
+              {chatMessages.map((chatMessage)=> {
+                  return(
+                    <ChatMessage 
+                      message={chatMessage.message}
+                      sender={chatMessage.sender}
+                      key={chatMessage.id} 
+                    />
+                  );
+              })}
+            </>
+          );
+        }
+
         function App(){
+          const [chatMessages, setChatMessages] = React.useState([{
+              message: "Hello, Bot!",
+              sender: "user",
+              id: 'id1'
+            },{
+              message: "Hello, how can I help you?",
+              sender: "robot",
+              id: 'id2'
+            },{
+              message: "What is the weather like today?",
+              sender: "user",
+              id: 'id3'
+            },{
+              message: "The weather is sunny with a high of 25°C.",
+              sender: "robot",
+              id: 'id4'
+          }]);
+          //const [chatMessages, setChatMessages] = array;
+          // const chatMessages = array[0];
+          // const setChatMessages = array[1];
           return (
             <>
-              <ChatInput />
-              <ChatMessage 
-                message="Hello, Bot!" 
-                sender="user" 
+              <ChatInput 
+                chatMessages={chatMessages}
+                setChatMessages={setChatMessages}
               />
-              <ChatMessage 
-                message="Hello, how can I help you?" 
-                sender="robot" 
-              />
-              <ChatMessage 
-                message="What is the weather like today?" 
-                sender="user" 
-              />
-              <ChatMessage 
-                message="The weather is sunny with a high of 25°C." 
-                sender="robot" 
+              <ChatMessages 
+                chatMessages={chatMessages}
               />
             </>
           );
