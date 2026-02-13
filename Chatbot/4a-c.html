@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <style>
+      .on-button {
+        background-color: rgb(34, 153, 98);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .off-button {
+        background-color: rgb(232, 20, 20);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+
+        function App(){
+            const [isButton, setIsButtonOn] = React.useState(false);
+
+           function switchButtonOn(){
+                setIsButtonOn(!isButton);
+            }
+
+
+          return (
+            <button 
+                className={isButton ? 'on-button' : 'off-button'}
+                onClick={switchButtonOn}>
+                {isButton ? "ON" : "OFF"}
+            </button>
+          );
+        }
+    
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

@@ -74,7 +74,17 @@
         margin-top: 20px;
         overflow: scroll;
         scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
 
+      .welcome-message {
+        color: rgb(120, 120, 120);
+        text-align: center;
+      }
+
+      .loading-spinner {
+        height: 40px;
+        margin: -15px;
       }
     </style>
   </head>
@@ -90,27 +100,25 @@
     <script type="text/babel">
       function ChatInput({ chatMessages, setChatMessages }) {
         const [inputText, setInputText] = React.useState('');
-        const [isLoading, setIsLoading] = React.useState(false);
 
         function saveInputText(event) {
           setInputText(event.target.value);
         }
 
         function keyPressFunction(event) {
-           if(event.key === 'Enter'){
-            setInputText('');
-            sendMessage();
+            if(event.key === 'Enter'){
+                setInputText('');
+                sendMessage();
             }else if(event.key === 'Escape'){
-            setInputText('');
+                setInputText('');
             }
         };
-        
-        async function sendMessage() {
-          if (isLoading || inputText === '') {
-            return;
-          }
-          setIsLoading(true);
 
+        function saveInputText(event) {
+          setInputText(event.target.value);
+        }
+
+        async function sendMessage() {
           const newChatMessages = [
             ...chatMessages,
             {
@@ -119,20 +127,20 @@
               id: crypto.randomUUID()
             }
           ];
-          setInputText('');
 
-          setChatMessages(newChatMessages);
-
-          const response = await Chatbot.getResponseAsync(inputText);
           setChatMessages([
             ...newChatMessages,
+            // This creates a temporary Loading... message.
+            // Because we don't save this message in newChatMessages,
+            // it will be removed later, when we add the response.
             {
-              message: 'Loading...',
+              message: <img src="loading-spinner.gif" className="loading-spinner" />,
               sender: 'robot',
               id: crypto.randomUUID()
             }
           ]);
 
+          const response = await Chatbot.getResponseAsync(inputText);
           setChatMessages([
             ...newChatMessages,
             {
@@ -141,7 +149,8 @@
               id: crypto.randomUUID()
             }
           ]);
-          setIsLoading(false);
+
+          setInputText('');
         }
 
         return (
@@ -150,6 +159,7 @@
               placeholder="Send a message to Chatbot"
               size="30"
               onChange={saveInputText}
+              onKeyDown={keyPressFunction}
               value={inputText}
               className="chat-input"
             />
@@ -196,8 +206,21 @@
         );
       }
 
-      function ChatMessages({ chatMessages }) {
+      function useAutoScroll(chatMessages) {
         const chatMessagesRef = React.useRef(null);
+
+        React.useEffect(() => {
+          const containerElem = chatMessagesRef.current;
+          if (containerElem) {
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, [chatMessages]);
+
+        return chatMessagesRef;
+      }
+
+      function ChatMessages({ chatMessages }) {
+        const chatMessagesRef = useAutoScroll(chatMessages);
 
         React.useEffect(() => {
           const containerElem = chatMessagesRef.current;
@@ -222,29 +245,18 @@
       }
 
       function App() {
-        const [chatMessages, setChatMessages] = React.useState([{
-          message: 'hello chatbot',
-          sender: 'user',
-          id: 'id1'
-        }, {
-          message: 'Hello! How can I help you?',
-          sender: 'robot',
-          id: 'id2'
-        }, {
-          message: 'can you get me todays date?',
-          sender: 'user',
-          id: 'id3'
-        }, {
-          message: 'Today is September 27',
-          sender: 'robot',
-          id: 'id4'
-        }]);
+        const [chatMessages, setChatMessages] = React.useState([]);
         // const [chatMessages, setChatMessages] = array;
         // const chatMessages = array[0];
         // const setChatMessages = array[1];
 
         return (
           <div className="app-container">
+            {chatMessages.length === 0 && (
+              <p className="welcome-message">
+                Welcome to the chatbot project! Send a message using the textbox below.
+              </p>
+            )}
             <ChatMessages
               chatMessages={chatMessages}
             />
@@ -260,4 +272,3 @@
       ReactDOM.createRoot(container).render(<App />);
     </script>
   </body>
-</html>
