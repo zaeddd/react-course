@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChatInput } from './components/ChatInput.jsx';
-import RobotProfileImage from './assets/robot.png'; 
+import RobotProfileImage from './assets/robot.png';   
 import UserProfileImage from './assets/user.png';
-import LoadingSpinner from './assets/loading-spinner.gif';
 import './App.css'
-
 
 function ChatMessage({ message, sender }) {
   // const message = props.message;
@@ -42,7 +40,7 @@ function ChatMessage({ message, sender }) {
 }
 
 function useAutoScroll(chatMessages) {
-  const chatMessagesRef = useRef(null);
+  const chatMessagesRef =useRef(null);
 
   useEffect(() => {
     const containerElem = chatMessagesRef.current;

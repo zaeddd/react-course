@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Chatbot } from 'supersimpledev';
-
+// import LoadingSpinner from './assets/loading-spinner.gif';
 
 export function ChatInput({ chatMessages, setChatMessages }) {
   const [inputText, setInputText] = useState('');
@@ -34,7 +34,7 @@ export function ChatInput({ chatMessages, setChatMessages }) {
       // Because we don't save this message in newChatMessages,
       // it will be removed later, when we add the response.
       {
-        message: <img src={LoadingSpinner} className="loading-spinner" />,
+        message: <img src="./assets/loading-spinner.gif" className="loading-spinner" />,
         sender: 'robot',
         id: crypto.randomUUID()
       }
